@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explora CNC, diseño de placas de circuito impreso e impresión 3D en una plataforma interactiva de fabricación digital.">
+  <title>Fabricación Digital | CNC · PCB · Impresión 3D</title>
+  <style>
+    :root {
+      --bg: #080d18;
+      --panel: #101a2b;
+      --panel2: #142238;
+      --text: #edf4ff;
+      --muted: #a8b6cc;
+      --blue: #52c7ff;
+      --purple: #a78bfa;
+      --green: #65e6bd;
+      --line: rgba(165,190,225,.16);
+      --shadow: 0 18px 55px rgba(0,0,0,.28);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(45,124,190,.18), transparent 28rem),
+        radial-gradient(circle at 88% 35%, rgba(130,85,210,.14), transparent 30rem),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .container { width: min(1140px, 90%); margin: auto; }
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(8,13,24,.82); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 800; letter-spacing: .04em; }
+    .brand-mark {
+      width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center;
+      color: #06111e; font-weight: 900; background: linear-gradient(135deg,var(--blue),var(--purple));
+      box-shadow: 0 0 24px rgba(82,199,255,.25);
+    }
+    .nav-links { display: flex; gap: 24px; align-items: center; color: var(--muted); font-size: .92rem; }
+    .nav-links a:hover { color: var(--blue); }
+    .menu-btn { display: none; border: 1px solid var(--line); color: var(--text); background: var(--panel); border-radius: 10px; padding: 8px 12px; }
+    .hero { padding: 92px 0 74px; overflow: hidden; }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
+    .eyebrow { color: var(--blue); font-size: .78rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+    h1 { font-size: clamp(2.6rem, 6vw, 5.2rem); line-height: 1.04; letter-spacing: -.055em; margin: 18px 0 22px; }
+    .gradient { background: linear-gradient(100deg,var(--blue),#a9a0ff 55%,var(--green)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero p { max-width: 650px; color: var(--muted); font-size: 1.08rem; }
+    .actions { display: flex; gap: 13px; flex-wrap: wrap; margin-top: 30px; }
+    .btn { border: 1px solid transparent; border-radius: 12px; padding: 12px 19px; font-weight: 750; display: inline-flex; align-items: center; justify-content: center; transition: .2s; cursor: pointer; }
+    .btn-primary { background: linear-gradient(110deg,var(--blue),#9d8cff); color: #07111e; }
+    .btn-secondary { border-color: var(--line); color: var(--text); background: rgba(255,255,255,.03); }
+    .btn:hover { transform: translateY(-3px); filter: brightness(1.08); }
+    .hero-art { min-height: 360px; position: relative; display: grid; place-items: center; }
+    .orbit { position: absolute; width: min(340px,75vw); aspect-ratio: 1; border: 1px solid rgba(82,199,255,.28); border-radius: 50%; animation: spin 28s linear infinite; }
+    .orbit:before,.orbit:after { content:""; position:absolute; width:12px; height:12px; border-radius:50%; background:var(--blue); box-shadow:0 0 22px var(--blue); }
+    .orbit:before { top: 12%; left: 17%; } .orbit:after { bottom: 10%; right: 15%; background:var(--purple); box-shadow:0 0 22px var(--purple); }
+    .core { width: 220px; height: 220px; border-radius: 34px; display:grid; place-items:center; font-size:5.5rem; background:linear-gradient(145deg,rgba(82,199,255,.18),rgba(167,139,250,.15)); border:1px solid rgba(150,190,255,.25); box-shadow:0 0 80px rgba(82,160,255,.16), inset 0 0 45px rgba(255,255,255,.04); transform:rotate(-8deg); }
+    .float-tag { position:absolute; padding:9px 13px; border:1px solid var(--line); border-radius:12px; background:rgba(16,26,43,.88); color:var(--muted); box-shadow:var(--shadow); font-size:.85rem; }
+    .tag-one { top:14%; right:0; } .tag-two { bottom:13%; left:0; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    section { padding: 76px 0; scroll-margin-top: 78px; }
+    .section-head { max-width: 720px; margin-bottom: 34px; }
+    .section-head h2 { font-size: clamp(2rem,4vw,3.2rem); line-height:1.12; letter-spacing:-.04em; margin:10px 0 13px; }
+    .section-head p { color:var(--muted); }
+    .topic-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+    .topic-card,.info-card,.step,.quiz-box { background:linear-gradient(145deg,rgba(20,34,56,.94),rgba(13,22,37,.96)); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); }
+    .topic-card { padding:25px; transition:.25s; }
+    .topic-card:hover { transform:translateY(-7px); border-color:rgba(82,199,255,.5); }
+    .topic-icon { width:52px;height:52px;border-radius:15px;display:grid;place-items:center;font-size:1.65rem;background:rgba(82,199,255,.1);margin-bottom:18px; }
+    .topic-card h3 { font-size:1.25rem;margin-bottom:9px; }
+    .topic-card p { color:var(--muted);font-size:.94rem;min-height:78px; }
+    .text-link { display:inline-block;margin-top:18px;color:var(--blue);font-weight:750; }
+    .topic-section { border-top:1px solid var(--line); }
+    .topic-layout { display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start; }
+    .info-card { padding:26px; }
+    .info-card h3 { margin-bottom:13px;font-size:1.2rem; }
+    .info-card p { color:var(--muted); }
+    .feature-list { list-style:none;display:grid;gap:12px;margin-top:17px; }
+    .feature-list li { display:flex;gap:11px;color:var(--muted); }
+    .feature-list li:before { content:"✓";color:var(--green);font-weight:900; }
+    .process { display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:22px; }
+    .step { padding:19px; }
+    .step-num { color:var(--blue);font-weight:900;font-size:.8rem;letter-spacing:.12em; }
+    .step h4 { margin:7px 0; }
+    .step p { color:var(--muted);font-size:.88rem; }
+    .callout { margin-top:24px;padding:20px 23px;border-left:3px solid var(--purple);background:rgba(167,139,250,.08);border-radius:0 13px 13px 0;color:var(--muted); }
+    .callout strong { color:var(--text); }
+    .method-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:20px; }
+    .method { border:1px solid var(--line);border-radius:15px;padding:18px;background:rgba(255,255,255,.025); }
+    .method h4 { color:var(--blue);margin-bottom:7px; }
+    .method p { color:var(--muted);font-size:.9rem; }
+    .quiz-box { padding:28px;max-width:760px; }
+    .quiz-box h3 { font-size:1.35rem;margin-bottom:10px; }
+    .quiz-box p { color:var(--muted); }
+    .quiz-options { display:grid;gap:10px;margin:20px 0; }
+    .quiz-options button { text-align:left;padding:13px 15px;border:1px solid var(--line);border-radius:11px;color:var(--text);background:rgba(255,255,255,.03);cursor:pointer; }
+    .quiz-options button:hover { border-color:var(--blue);background:rgba(82,199,255,.07); }
+    .quiz-options button.correct { border-color:var(--green);background:rgba(101,230,189,.1); }
+    .quiz-options button.wrong { border-color:#fb7185;background:rgba(251,113,133,.1); }
+    #quiz-feedback { min-height:28px;color:var(--green);font-weight:700; }
+    .footer { border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-size:.9rem; }
+    .footer-inner { display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap; }
+    .back-top { color:var(--blue); }
+    @media(max-width:850px) {
+      .hero-grid,.topic-layout { grid-template-columns:1fr; }
+      .hero-art { min-height:300px; }
+      .topic-grid { grid-template-columns:1fr; }
+      .topic-card p { min-height:0; }
+      .process { grid-template-columns:repeat(2,1fr); }
+      .method-grid { grid-template-columns:1fr; }
+    }
+    @media(max-width:650px) {
+      .menu-btn { display:block; }
+      .nav-links { display:none;position:absolute;top:72px;left:0;right:0;padding:18px 5%;background:#0b1423;border-bottom:1px solid var(--line);flex-direction:column;align-items:flex-start; }
+      .nav-links.open { display:flex; }
+      .hero { padding-top:62px; }
+      .hero-art { min-height:260px; }
+      .core { width:170px;height:170px;font-size:4.2rem; }
+      .process { grid-template-columns:1fr; }
+      section { padding:58px 0; }
+    }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important;animation:none!important;transition:none!important; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="#inicio"><span class="brand-mark">FD</span><span>FABRICACIÓN DIGITAL</span></a>
+      <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false">☰</button>
+      <nav class="nav-links" id="navLinks">
+        <a href="#explorar">Explorar</a><a href="#cnc">CNC</a><a href="#pcb">Placas PCB</a><a href="#impresion3d">Impresión 3D</a><a href="#quiz">Evaluación</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Tecnología · Diseño · Innovación</div>
+          <h1>El futuro se <span class="gradient">construye</span> digitalmente.</h1>
+          <p>Descubre cómo las máquinas CNC, el diseño de circuitos impresos y la impresión 3D están transformando la manera de diseñar y fabricar objetos, componentes y soluciones tecnológicas.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="#explorar">Explorar tecnologías ↗</a>
+            <a class="btn btn-secondary" href="#quiz">Poner a prueba mis conocimientos</a>
+          </div>
+        </div>
+        <div class="hero-art" aria-label="Ilustración abstracta de tecnología digital">
+          <div class="orbit"></div><div class="core">⚙️</div>
+          <div class="float-tag tag-one">⌘ Precisión digital</div>
+          <div class="float-tag tag-two">▦ Fabricación inteligente</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="explorar">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Tres áreas principales</div>
+          <h2>Explora las tecnologías que dan forma al mundo.</h2>
+          <p>Cada una cumple una función diferente dentro de la fabricación moderna, pero juntas permiten crear productos y sistemas cada vez más avanzados.</p>
+        </div>
+        <div class="topic-grid">
+          <article class="topic-card">
+            <div class="topic-icon">⚙️</div><h3>Equipos CNC</h3>
+            <p>Conoce el control numérico computarizado y cómo una máquina transforma instrucciones digitales en movimientos precisos.</p>
+            <a class="text-link" href="#cnc">Conocer CNC →</a>
+          </article>
+          <article class="topic-card">
+            <div class="topic-icon">▦</div><h3>Placas de circuito impreso</h3>
+            <p>Aprende cómo se organizan las pistas conductoras y los componentes que permiten funcionar a los dispositivos electrónicos.</p>
+            <a class="text-link" href="#pcb">Conocer PCB →</a>
+          </article>
+          <article class="topic-card">
+            <div class="topic-icon">🧊</div><h3>Impresión 3D</h3>
+            <p>Explora la fabricación aditiva: crear objetos tridimensionales a partir de modelos digitales y materiales especializados.</p>
+            <a class="text-link" href="#impresion3d">Conocer impresión 3D →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="topic-section" id="cnc">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">01 / Control numérico computarizado</div>
+          <h2>Equipos <span class="gradient">CNC</span></h2>
+          <p>El CNC permite controlar máquinas herramienta mediante instrucciones programadas, logrando movimientos repetibles y trabajos de gran precisión.</p>
+        </div>
+        <div class="topic-layout">
+          <div class="info-card">
+            <h3>¿Cómo funciona?</h3>
+            <p>Primero se diseña una pieza en un programa de diseño asistido por computadora (CAD). Después, un programa CAM ayuda a preparar las trayectorias y genera instrucciones que el controlador de la máquina interpreta para mover sus ejes y herramientas.</p>
+            <ul class="feature-list">
+              <li>El controlador interpreta el programa de mecanizado.</li>
+              <li>Los motores desplazan los ejes de la máquina.</li>
+              <li>La herramienta realiza operaciones sobre el material.</li>
+              <li>Los sistemas de medición ayudan a mantener la precisión.</li>
+            </ul>
+          </div>
+          <div class="info-card">
+            <h3>Componentes principales</h3>
+            <ul class="feature-list">
+              <li><strong>Controlador:</strong> procesa las instrucciones.</li>
+              <li><strong>Motores y accionamientos:</strong> producen el movimiento.</li>
+              <li><strong>Ejes:</strong> definen las direcciones de desplazamiento.</li>
+              <li><strong>Husillo:</strong> hace girar la herramienta o pieza, según la máquina.</li>
+              <li><strong>Estructura y mesa:</strong> sostienen el conjunto y el material.</li>
+              <li><strong>Sistema de seguridad:</strong> protege al operador y al equipo.</li>
+            </ul>
+          </div>
+        </div>
+        <h3 style="margin-top:30px">Etapas generales de trabajo</h3>
+        <div class="process">
+          <div class="step"><div class="step-num">PASO 01</div><h4>Diseño CAD</h4><p>Se crea el modelo digital de la pieza.</p></div>
+          <div class="step"><div class="step-num">PASO 02</div><h4>Preparación CAM</h4><p>Se definen operaciones y trayectorias de fabricación.</p></div>
+          <div class="step"><div class="step-num">PASO 03</div><h4>Control CNC</h4><p>El controlador interpreta las instrucciones programadas.</p></div>
+          <div class="step"><div class="step-num">PASO 04</div><h4>Verificación</h4><p>Se revisan medidas, acabado y calidad de la pieza.</p></div>
+        </div>
+        <div class="callout"><strong>Aplicaciones:</strong> fabricación de piezas para automóviles, componentes aeronáuticos, moldes, muebles, herramientas y prototipos. Algunos tipos de equipos son fresadoras, tornos, routers y cortadoras por plasma o láser.</div>
+      </div>
+    </section>
+
+    <section class="topic-section" id="pcb">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">02 / Electrónica y diseño</div>
+          <h2>Diseño de placas de <span class="gradient">circuito impreso</span></h2>
+          <p>Una PCB (Printed Circuit Board) conecta y sostiene componentes electrónicos mediante pistas conductoras distribuidas sobre una base aislante.</p>
+        </div>
+        <div class="topic-layout">
+          <div class="info-card">
+            <h3>¿Qué contiene una PCB?</h3>
+            <p>La placa sirve como soporte físico y como medio de conexión eléctrica entre los componentes de un circuito.</p>
+            <ul class="feature-list">
+              <li><strong>Sustrato:</strong> base aislante, comúnmente de fibra de vidrio.</li>
+              <li><strong>Pistas de cobre:</strong> caminos que conducen señales y energía.</li>
+              <li><strong>Componentes:</strong> resistencias, condensadores, circuitos integrados y conectores.</li>
+              <li><strong>Máscara de soldadura:</strong> capa protectora que ayuda a evitar puentes de soldadura.</li>
+              <li><strong>Serigrafía:</strong> identifica componentes, símbolos y referencias.</li>
+            </ul>
+          </div>
+          <div class="info-card">
+            <h3>Proceso general de diseño</h3>
+            <ul class="feature-list">
+              <li>Definir qué debe hacer el circuito y sus requisitos.</li>
+              <li>Crear el esquema electrónico y seleccionar componentes.</li>
+              <li>Diseñar la distribución física de los componentes.</li>
+              <li>Enrutar las pistas y revisar reglas de diseño (DRC).</li>
+              <li>Generar archivos de fabricación y comprobar el prototipo.</li>
+            </ul>
+          </div>
+        </div>
+        <h3 style="margin-top:30px">Metodologías y prácticas actuales</h3>
+        <div class="method-grid">
+          <div class="method"><h4>Diseño modular</h4><p>Divide el circuito en bloques funcionales para facilitar su desarrollo, prueba y mantenimiento.</p></div>
+          <div class="method"><h4>Diseño para fabricación (DFM)</h4><p>Considera desde el inicio las capacidades del fabricante para reducir errores y facilitar el ensamblaje.</p></div>
+          <div class="method"><h4>Simulación y verificación</h4><p>Utiliza herramientas de simulación y comprobaciones automáticas antes de fabricar la placa.</p></div>
+        </div>
+        <div class="callout"><strong>Herramientas conocidas:</strong> KiCad, Autodesk Fusion Electronics y Altium Designer. Se utilizan para elaborar esquemas, diseñar placas y preparar documentación de fabricación.</div>
+      </div>
+    </section>
+
+    <section class="topic-section" id="impresion3d">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">03 / Fabricación aditiva</div>
+          <h2>Tecnología de <span class="gradient">impresión 3D</span></h2>
+          <p>La impresión 3D crea objetos físicos a partir de modelos digitales, agregando material de forma progresiva en lugar de retirarlo de un bloque.</p>
+        </div>
+        <div class="topic-layout">
+          <div class="info-card">
+            <h3>¿Cómo funciona?</h3>
+            <p>Un modelo tridimensional se prepara en un programa de laminado o slicer. El software lo divide en capas y genera instrucciones para que la impresora deposite o solidifique el material siguiendo cada sección.</p>
+            <ul class="feature-list">
+              <li>Se diseña o descarga un modelo 3D.</li>
+              <li>Se configuran material, capas y parámetros de impresión.</li>
+              <li>La impresora construye el objeto capa por capa.</li>
+              <li>Se retiran soportes y se realiza el acabado si es necesario.</li>
+            </ul>
+          </div>
+          <div class="info-card">
+            <h3>Tecnologías principales</h3>
+            <ul class="feature-list">
+              <li><strong>FDM/FFF:</strong> funde y deposita filamento termoplástico.</li>
+              <li><strong>SLA:</strong> solidifica resina líquida mediante luz.</li>
+              <li><strong>SLS:</strong> fusiona selectivamente polvo, normalmente polímero, mediante láser.</li>
+              <li><strong>Impresión de metal:</strong> utiliza procesos especializados para fabricar piezas metálicas.</li>
+            </ul>
+          </div>
+        </div>
+        <h3 style="margin-top:30px">Materiales y aplicaciones</h3>
+        <div class="method-grid">
+          <div class="method"><h4>PLA y PETG</h4><p>Filamentos termoplásticos utilizados en prototipos, modelos, soportes y piezas de uso general.</p></div>
+          <div class="method"><h4>Resinas fotopoliméricas</h4><p>Materiales líquidos que se endurecen con luz y permiten obtener detalles finos.</p></div>
+          <div class="method"><h4>Polvos y metales</h4><p>Materiales empleados en procesos industriales especializados para piezas funcionales.</p></div>
+        </div>
+        <div class="callout"><strong>Aplicaciones:</strong> prototipado, educación, arquitectura, medicina, diseño industrial, piezas personalizadas y fabricación de repuestos. La elección del proceso depende del material, el detalle, la resistencia y el uso final.</div>
+      </div>
+    </section>
+
+    <section id="quiz">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Aprende y comprueba</div>
+          <h2>¿Cuánto aprendiste?</h2>
+          <p>Responde esta pregunta rápida para repasar uno de los conceptos principales.</p>
+        </div>
+        <div class="quiz-box">
+          <h3>¿Qué significa que la impresión 3D sea un proceso de fabricación aditiva?</h3>
+          <p>Selecciona la respuesta correcta:</p>
+          <div class="quiz-options" id="quizOptions">
+            <button data-correct="false">Que corta material de un bloque hasta obtener la pieza.</button>
+            <button data-correct="true">Que construye el objeto agregando material progresivamente, capa por capa.</button>
+            <button data-correct="false">Que conecta componentes electrónicos con pistas de cobre.</button>
+          </div>
+          <div id="quiz-feedback" aria-live="polite"></div>
+          <button class="btn btn-secondary" id="resetQuiz" type="button">Volver a intentar</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>© 2026 · Fabricación Digital</span>
+      <span>Proyecto educativo sobre CNC, PCB e impresión 3D.</span>
+      <a class="back-top" href="#inicio">Volver arriba ↑</a>
+    </div>
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    menuBtn.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', String(isOpen));
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    const options = document.querySelectorAll('#quizOptions button');
+    const feedback = document.getElementById('quiz-feedback');
+    options.forEach(option => {
+      option.addEventListener('click', () => {
+        options.forEach(item => {
+          item.classList.remove('correct', 'wrong');
+          item.disabled = true;
+        });
+        if (option.dataset.correct === 'true') {
+          option.classList.add('correct');
+          feedback.textContent = '¡Correcto! La impresión 3D agrega material para formar el objeto.';
+        } else {
+          option.classList.add('wrong');
+          options.forEach(item => {
+            if (item.dataset.correct === 'true') item.classList.add('correct');
+          });
+          feedback.textContent = 'No es esa. La fabricación aditiva construye el objeto agregando material capa por capa.';
+        }
+      });
+    });
+    document.getElementById('resetQuiz').addEventListener('click', () => {
+      options.forEach(item => {
+        item.disabled = false;
+        item.classList.remove('correct', 'wrong');
+      });
+      feedback.textContent = '';
+    });
+  </script>
+</body>
+</html>
